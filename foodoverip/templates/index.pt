@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html>
     <head>
+      <link rel="stylesheet" href="${request.static_url('foodoverip:/static/bootstrap.min.css')}" />
     </head>
     <body>
-        <div>
-          Hello!
-            
+     <div data-scrollspy="scrollspy" class="topbar">
+      <div class="topbar-inner">
+        <div class="container">
+          <a href="#" class="brand">Food Over IP</a>
+          <ul class="nav">
+            <li class=""><a href="#overview">Overview</a></li>
+            <li class=""><a href="#about">About</a></li>
+          </ul>
         </div>
+      </div>
+    </div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div class="container">
+      <div class="content">
+        blah...
+      </div>
+    </div>  
     </body>
 </html>

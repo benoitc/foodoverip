@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from pyramid.view import view_config
+import json
 
 @view_config(context='velruse.api.AuthenticationComplete', renderer='json')
 def auth_complete_view(context, request):
@@ -16,7 +17,11 @@ def auth_denied_view(context, request):
 
 @view_config(route_name='home', renderer='templates/index.pt')
 def index(context, request):
-    return {}
+    r = request.registry.redis
+    data = redis.randomkey()
+    if isinstance(data, basestring):
+        data = json.loads(data)
+    return {data=data}
 
 
 
