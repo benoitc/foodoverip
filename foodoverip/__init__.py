@@ -1,6 +1,7 @@
 from pyramid.config import Configurator
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from velruse.providers import twitter
+import redis
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -12,10 +13,14 @@ def main(global_config, **settings):
         settings=settings,
         session_factory=session_factory,
     )
+    pool = redis.ConnectionPool(host='localhost', port=6379, db=0)
+    setattr(config.registry, 'redis', redis.Redis(connection_pool=pool))
     config.include(twitter)
 
     config.add_route('home', '/')
 
     config.scan('.views')
     return config.make_wsgi_app()
+
+
 
