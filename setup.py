@@ -10,7 +10,7 @@ setup(name='foodoverip',
 """,
       classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       keywords='food over ip',
-      author='Gevrey-Chambertin Crew',
+      author='Gevrey-Chambertin-2009 Crew',
       author_email='',
       url='http://foodoverip.org',
       license='BSD',
@@ -24,11 +24,14 @@ setup(name='foodoverip',
           'velruse',
           'tweepy',
           'redis',
+          'ConfigObject',
       ],
       entry_points="""
       # -*- Entry points: -*-
       [paste.app_factory]
       main = foodoverip:main
+      [console_scripts]
+      go_grab_food = foodoverip.listen:run_cli
       """,
       paster_plugins=['pyramid'],
       )

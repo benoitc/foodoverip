@@ -20,6 +20,7 @@
     <div>&nbsp;</div>
     <div class="container">
       <div class="content">
+          ${data}
         blah...
       </div>
     </div>  

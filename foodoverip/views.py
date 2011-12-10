@@ -15,13 +15,12 @@ def auth_complete_view(context, request):
 def auth_denied_view(context, request):
     return context.args
 
+
 @view_config(route_name='home', renderer='templates/index.pt')
 def index(context, request):
     r = request.registry.redis
-    data = redis.randomkey()
+    data = r.get(r.randomkey())
+
     if isinstance(data, basestring):
         data = json.loads(data)
-    return {data=data}
-
-
-
+    return {'data': data}
