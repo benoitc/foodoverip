@@ -29,6 +29,7 @@ setup(name='foodoverip',
           'restkit',
           'pyquery',
           'pillow',
+          'gunicorn',
       ],
       entry_points="""
       # -*- Entry points: -*-
