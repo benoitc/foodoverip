@@ -107,3 +107,7 @@ def run_cli():
     client = tweepy.API(auth)
     parse_results(client.search(config['app:pyramid'].hashtag,
         include_entities=True), config)
+
+
+if __name__ == "__main__":
+    run_cli()
