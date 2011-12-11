@@ -6,6 +6,7 @@ import tweepy
 from ConfigObject import ConfigObject
 from restkit import request
 from pyquery import PyQuery
+import urllib2
 
 from foodoverip.util import JSONEncoder, get_connections
 
@@ -16,7 +17,7 @@ IMAGE_SERVICES = {'yfrog': '#main_image',
 
 
 def get_auth(config):
-    section = config['app:main']
+    section = config['app:pyramid']
     consumer_key = section['velruse.twitter.consumer_key']
     consumer_secret = section['velruse.twitter.consumer_secret']
     access_token = section['velruse.twitter.access_token']
@@ -27,19 +28,18 @@ def get_auth(config):
     return auth
 
 
-def save_picture(id, url):
-
-    img_path = os.path.join(os.path.dirname(__file__), 'static', 'images')
+def save_picture(url, destination):
 
     r = request(url)
 
     with r.body_stream() as body:
-        with open(os.path.join(img_path, str(id)), 'wb') as f:
+        with open(destination, 'wb') as f:
             for block in body:
                 f.write(block)
 
 
 def get_picture(tweet):
+    print "found a picture for %s" % tweet.id
 
     # get the images if any and store them
     for media in tweet.entities.get('media', []):
@@ -48,7 +48,10 @@ def get_picture(tweet):
 
     for url_ in tweet.entities['urls']:
         url = url_['expanded_url']
-        d = PyQuery(url)
+        try:
+            d = PyQuery(url)
+        except urllib2.HTTPError:
+            continue
         selector = IMAGE_SERVICES.get(urlparse(url).netloc, None)
         if selector:
             images = d("img%s" % selector)
@@ -68,17 +71,31 @@ def parse_results(results, config):
         if not con['tweets'].exists(tweet.id) \
            and not tweet.text.startswith("RT"):
 
+            # get the picture
             con['tweets'].set(tweet.id, encoder.encode(tweet.__dict__))
             url = get_picture(tweet)
             if url:
-                save_picture(tweet.id, url)
-            # get tags
+                img_path = os.path.join(os.path.dirname(__file__), 'static',
+                                        'images', str(tweet.id))
+                save_picture(url, img_path)
 
+            # get tags
             tags = [h['text'] for h in tweet.entities['hashtags']
-                    if h['text'] != config['app:main'].hashtag]
+                    if h['text'] != config['app:pyramid'].hashtag]
 
             for tag in tags:
                 con['tags'].rpush(tag, tweet.id)
+
+            # save the user
+            con['users'].rpush(tweet.from_user, tweet.id)
+
+            # .. and his avatar if needed
+            avatars_path = os.path.join(os.path.dirname(__file__),
+                    'static', 'avatars')
+
+            avatar_path = os.path.join(avatars_path, tweet.from_user)
+            if not os.path.isfile(avatar_path):  # XXX the avatar can't change
+                save_picture(tweet.profile_image_url, avatar_path)
 
 
 def run_cli():
@@ -86,5 +103,5 @@ def run_cli():
 
     auth = get_auth(config)
     client = tweepy.API(auth)
-    parse_results(client.search(config['app:main'].hashtag,
+    parse_results(client.search(config['app:pyramid'].hashtag,
         include_entities=True), config)

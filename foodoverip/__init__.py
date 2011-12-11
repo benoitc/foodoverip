@@ -22,8 +22,14 @@ def main(global_config, **settings):
     config.include(twitter)
 
     config.add_route('random', '/')
+    config.add_route('about', '/about')
+    config.add_view(route_name='about', renderer="templates/about.pt")
+
     config.add_route('tag', '/tag/{tag}')
     config.add_route('get', '/{key}')
+    config.add_route('thumb', '/thumbs/square/{key}')
+
+    config.add_route('user', '/user/{user}')
 
     config.scan('.views')
 

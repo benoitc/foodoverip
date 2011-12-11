@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from pyramid.view import view_config
-from pyramid.httpexceptions import HTTPFound
-from pyramid.renderers import get_renderer, render_to_response
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+from pyramid.renderers import get_renderer
 import json
 
 
@@ -27,20 +27,23 @@ def add_base_template(event):
 @view_config(route_name='random')
 def random(context, request):
     key = request.registry.con['tweets'].randomkey()
-    raise HTTPFound(request.route_url('get', key=key))
+    if key:
+        raise HTTPFound(request.route_url('get', key=key))
+    else:
+        raise HTTPFound(request.route_url('about'))
 
 
 @view_config(route_name='get', renderer='templates/index.pt')
 def get(context, request):
     key = request.matchdict['key']
-    
+
     tweets = request.registry.con['tweets']
     data = tweets.get(key)
     if isinstance(data, basestring):
         data = json.loads(data)
 
     response = {'data': data}
-    if ('geo' in data and data['geo'] is not None 
+    if ('geo' in data and data['geo'] is not None
         and 'coordinates' in data['geo']):
         response['location'] = data['geo']['coordinates']
     else:
@@ -51,8 +54,8 @@ def get(context, request):
 
 @view_config(route_name='tag', renderer='templates/tag.pt')
 def tag(context, request):
-    tag = request.matchdict('tag')
-    con = request.registry['con']
+    tag = request.matchdict['tag']
+    con = request.registry.con
 
     ids = con.tags.lrange(tag, 0, -1)
     if not ids:
@@ -60,7 +63,15 @@ def tag(context, request):
 
     # get the tweets for this tag
     tweets = []
-    for id in ids:
-        tweets.append(con.tweets.get(id))
+    for idx in ids:
+        tweets.append(con['tweets'].get(idx))
 
     return {'tweets': tweets}
+
+
+@view_config(route_name='user', renderer='templates/user.pt')
+def user(context, request):
+    user = request.matchdict['user']
+    users = request.registry.con['users']
+    return {'tweet_ids': users.lrange(user, 0, -1),
+            'username': user, 'tweet_len': users.llen(user)}

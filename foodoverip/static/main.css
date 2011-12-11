@@ -15,3 +15,17 @@ img {
     padding: 3px;
     border: 3px #eee solid;
 }
+
+.left img {
+    margin-left: 20px;
+}
+
+.stacked {
+    float: left;
+}
+
+hr {
+    border: 0px;
+    margin: 5px;
+
+}

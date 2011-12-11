@@ -18,8 +18,9 @@ class JSONEncoder(json.JSONEncoder):
 
 
 def get_connections():
-    pool_tw = redis.ConnectionPool(host='localhost', port=6379, db=0)
-    pool_tags = redis.ConnectionPool(host='localhost', port=6379, db=1)
+    con = {}
+    for idx, name in enumerate(('tweets', 'tags', 'users')):
+        con[name] = redis.Redis(connection_pool=redis.ConnectionPool(
+                        host='localhost', port=6379, db=idx))
 
-    return {'tweets': redis.Redis(connection_pool=pool_tw),
-            'tags': redis.Redis(connection_pool=pool_tags)}
+    return con

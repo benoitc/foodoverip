@@ -28,6 +28,7 @@ setup(name='foodoverip',
           'hiredis',
           'restkit',
           'pyquery',
+          'pillow',
       ],
       entry_points="""
       # -*- Entry points: -*-
