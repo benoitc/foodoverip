@@ -1,6 +1,7 @@
 <html metal:use-macro="base.macros['base']">
     <div metal:fill-slot='content'>
-        <pre>http://foodoverip.org${request.path}</pre>
+      <p><a href="http://foodoverip.org${request.path}">A link to this
+        "food"</a> </p>
         <div class="row">
             <div class="left span6">
 
@@ -18,7 +19,9 @@
 
             </div>
             <div class="span10 description">
-                <img class="thumbnail" src="${request.static_url('foodoverip:/static/images/')}${data.id}" />
+                <img class="thumbnail"
+                src="${request.static_url('foodoverip:/static/images/')}${data.id}"
+                alt="${data.text}" title="${data.text}" />
         </div>
     </div>
 </div>
