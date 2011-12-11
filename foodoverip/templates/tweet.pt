@@ -22,6 +22,7 @@
                 <img class="thumbnail"
                 src="${request.static_url('foodoverip:/static/images/')}${data.id}"
                 alt="${data.text}" title="${data.text}" />
+                <a href="http://foodoverip.org${request.path}">A link to this "food"</a>
         </div>
     </div>
 </div>
