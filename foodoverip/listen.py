@@ -72,12 +72,14 @@ def parse_results(results, config):
            and not tweet.text.startswith("RT"):
 
             # get the picture
-            con['tweets'].set(tweet.id, encoder.encode(tweet.__dict__))
             url = get_picture(tweet)
             if url:
                 img_path = os.path.join(os.path.dirname(__file__), 'static',
                                         'images', str(tweet.id))
                 save_picture(url, img_path)
+                con['tweets'].set(tweet.id, encoder.encode(tweet.__dict__))
+            else:
+                continue
 
             # get tags
             tags = [h['text'] for h in tweet.entities['hashtags']
