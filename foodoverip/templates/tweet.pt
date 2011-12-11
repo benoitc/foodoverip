@@ -19,11 +19,11 @@
 
             </div>
             <div class="span10 description">
-                <img class="thumbnail"
+              <p><img class="thumbnail"
                 src="${request.static_url('foodoverip:/static/images/')}${data.id}"
-                alt="${data.text}" title="${data.text}" />
-                <p><a href="http://foodoverip.org${request.path}">A link
-                  to this "food"</a></p>
+                alt="${data.text}" title="${data.text}" /><br>
+                <span><a href="http://foodoverip.org${request.path}">A link
+                    to this "food"</a></span></p>
         </div>
     </div>
 </div>
