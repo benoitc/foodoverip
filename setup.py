@@ -25,6 +25,9 @@ setup(name='foodoverip',
           'tweepy',
           'redis',
           'ConfigObject',
+          'hiredis',
+          'restkit',
+          'pyquery',
       ],
       entry_points="""
       # -*- Entry points: -*-

@@ -1,7 +1,8 @@
 from pyramid.config import Configurator
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from velruse.providers import twitter
-import redis
+from foodoverip.util import get_connections
+
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -16,14 +17,17 @@ def main(global_config, **settings):
 
     config.add_static_view(name='static', path='foodoverip:/static')
 
-    pool = redis.ConnectionPool(host='localhost', port=6379, db=0)
-    setattr(config.registry, 'redis', redis.Redis(connection_pool=pool))
+    setattr(config.registry, 'con', get_connections())
+
     config.include(twitter)
 
-    config.add_route('home', '/')
+    config.add_route('random', '/')
+    config.add_route('tag', '/tag/{tag}')
+    config.add_route('get', '/{key}')
 
     config.scan('.views')
+
+    config.add_subscriber('foodoverip.views.add_base_template',
+                          'pyramid.events.BeforeRender')
+
     return config.make_wsgi_app()
-
-
-
