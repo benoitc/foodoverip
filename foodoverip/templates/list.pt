@@ -1,0 +1,10 @@
+<html metal:use-macro="base.macros['base']">
+    <div metal:fill-slot='content'>
+        <p>${tweet_len} pictures listed here</p>
+        <div tal:repeat="id tweets">
+            <a href="${request.route_url('get', key=id)}">
+                <img class="stacked thumbnail" src="${request.route_url('thumb', key=id)}" />
+            </a>
+        </div>
+    </div>
+</html>

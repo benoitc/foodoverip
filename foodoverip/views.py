@@ -24,6 +24,13 @@ def add_base_template(event):
     return event.update({'base': base})
 
 
+@view_config(route_name='list', renderer='templates/list.pt')
+def list_tweets(context, request):
+    misc = request.registry.con['misc']
+    return dict(tweets=misc.lrange('list', -10, -1),
+                tweet_len=misc.llen('list'))
+
+
 @view_config(route_name='random')
 def random(context, request):
     key = request.registry.con['tweets'].randomkey()
@@ -33,7 +40,7 @@ def random(context, request):
         raise HTTPFound(request.route_url('about'))
 
 
-@view_config(route_name='get', renderer='templates/index.pt')
+@view_config(route_name='get', renderer='templates/tweet.pt')
 def get(context, request):
     key = request.matchdict['key']
 
@@ -57,7 +64,7 @@ def tag(context, request):
     tag = request.matchdict['tag']
     con = request.registry.con
 
-    ids = con.tags.lrange(tag, 0, -1)
+    ids = con['misc'].lrange('tag:%s' % tag, 0, -1)
     if not ids:
         raise HTTPNotFound()
 
@@ -72,6 +79,6 @@ def tag(context, request):
 @view_config(route_name='user', renderer='templates/user.pt')
 def user(context, request):
     user = request.matchdict['user']
-    users = request.registry.con['users']
-    return {'tweet_ids': users.lrange(user, 0, -1),
-            'username': user, 'tweet_len': users.llen(user)}
+    misc = request.registry.con['misc']
+    return {'tweet_ids': misc.lrange("user:%s" % user, 0, -1),
+            'username': user, 'tweet_len': misc.llen('usr:%s' % user)}

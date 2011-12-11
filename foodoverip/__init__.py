@@ -21,6 +21,7 @@ def main(global_config, **settings):
 
     config.include(twitter)
 
+    config.add_route('list', '/')
     config.add_route('random', '/')
     config.add_route('about', '/about')
     config.add_view(route_name='about', renderer="templates/about.pt")

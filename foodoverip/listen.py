@@ -10,9 +10,12 @@ import urllib2
 
 from foodoverip.util import JSONEncoder, get_connections
 
-IMAGE_SERVICES = {'yfrog': '#main_image',
-                  'twitpic.com': '#photo-display',
-                  'lockerz.com': '#photo',
+IMAGE_SERVICES = {'yfrog': 'img#main_image',
+                  'twitpic.com': 'img#photo-display',
+                  'lockerz.com': 'img#photo',
+                  'flickr.com': '.photo-div img',
+                  'flic.kr': '.photo-div img',
+                  'twitgoo.com': 'img#fullsize',
 }
 
 
@@ -39,24 +42,26 @@ def save_picture(url, destination):
 
 
 def get_picture(tweet):
-    print "found a picture for %s" % tweet.id
-
     # get the images if any and store them
     for media in tweet.entities.get('media', []):
         if media['type'] == "photo" and media['media_url']:
             return media['media_url']
 
-    for url_ in tweet.entities['urls']:
+    for url_ in tweet.entities.get('urls', ()):
         url = url_['expanded_url']
         try:
             d = PyQuery(url)
         except urllib2.HTTPError:
             continue
-        selector = IMAGE_SERVICES.get(urlparse(url).netloc, None)
+
+        # fallback on "img"
+        selector = IMAGE_SERVICES.get(urlparse(url).netloc, False)
         if selector:
-            images = d("img%s" % selector)
+            images = d("%s" % selector)
             if images:
                 return images[0].attrib['src']
+        else:
+            print "url not handled: %s" % url
 
     return None
 
@@ -67,29 +72,36 @@ def parse_results(results, config):
     encoder = JSONEncoder()
 
     for tweet in results:
+        parse_tweet(con, encoder, config, tweet)
 
-        if not con['tweets'].exists(tweet.id) \
-           and not tweet.text.startswith("RT"):
 
-            # get the picture
-            url = get_picture(tweet)
-            if url:
-                img_path = os.path.join(os.path.dirname(__file__), 'static',
-                                        'images', str(tweet.id))
-                save_picture(url, img_path)
-                con['tweets'].set(tweet.id, encoder.encode(tweet.__dict__))
-            else:
-                continue
+def parse_tweet(con, encoder, config, tweet):
+
+    if not con['tweets'].exists(tweet.id) \
+       and not tweet.text.startswith("RT"):
+
+        # get the picture
+        url = get_picture(tweet)
+        if url and not con['misc'].sismember('cached_urls', url):
+
+            print "found a picture for '%s'" % tweet.text
+
+            img_path = os.path.join(os.path.dirname(__file__), 'static',
+                                    'images', str(tweet.id))
+            save_picture(url, img_path)
+            con['tweets'].set(tweet.id, encoder.encode(tweet.__dict__))
+            con['misc'].sadd('cached_urls', url)
 
             # get tags
-            tags = [h['text'] for h in tweet.entities['hashtags']
-                    if h['text'] != config['app:pyramid'].hashtag]
+            if 'hashtags' in tweet.entities:
+                tags = [h['text'] for h in tweet.entities['hashtags']
+                        if h['text'] != config['app:pyramid'].hashtag]
 
-            for tag in tags:
-                con['tags'].rpush(tag, tweet.id)
+                for tag in tags:
+                    con['misc'].rpush('tag:%s' % tag, tweet.id)
 
             # save the user
-            con['users'].rpush(tweet.from_user, tweet.id)
+            con['misc'].rpush('user:%s' % tweet.from_user, tweet.id)
 
             # .. and his avatar if needed
             avatars_path = os.path.join(os.path.dirname(__file__),
@@ -98,6 +110,9 @@ def parse_results(results, config):
             avatar_path = os.path.join(avatars_path, tweet.from_user)
             if not os.path.isfile(avatar_path):  # XXX the avatar can't change
                 save_picture(tweet.profile_image_url, avatar_path)
+
+            # we want to keep track of the tweets by date
+            con['misc'].rpush('list', tweet.id)
 
 
 def run_cli():
