@@ -8,7 +8,7 @@ from restkit import request
 from pyquery import PyQuery
 import urllib2
 
-from .util import JSONEncoder, get_connections
+from foodoverip.util import JSONEncoder, get_connections
 
 IMAGE_SERVICES = {'yfrog': 'img#main_image',
                   'twitpic.com': 'img#photo-display',
