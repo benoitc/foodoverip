@@ -147,8 +147,10 @@ def tweet_worker(db, q):
                 tweet['_id'] = "t/" + tweet['id_str']
                 rt = False
 
-            if not db.doc_exist(tweet['_id']):
-                db.save_doc(tweet)
+            if db.doc_exist(tweet['_id']):
+                continue
+
+            db.save_doc(tweet)
 
             # attach profil image to the tweet
             if 'profile_image_url' in tweet:
