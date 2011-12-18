@@ -1,2 +1,5 @@
+*.pyc
+*.pyo
+foodoverip.egg-info
 foodoverip/static/images/*
 foodoverip/static/avatars/*

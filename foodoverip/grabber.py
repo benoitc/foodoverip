@@ -41,7 +41,6 @@ def send_attachment(db, tweet, url, attname):
 
         out = BytesIO()
         img.save(out, 'png')
-        print "save %s in %s as %s" % (url, tweet['_id'],"%s.png" % attname)
         db.put_attachment(tweet, out, "%s.png" % attname,
                 headers={'Transfer-Encoding': 'chunked'})
 
