@@ -35,12 +35,14 @@ def get_db(server_uri, db_name):
 
 def attach_img(db, tweet, url, attname):
     res = restkit.request(url)
-
     if res.status_int == 200:
+        # convert image in PNG
         img = Image.open(BytesIO(res.body_string()))
-
         out = BytesIO()
         img.save(out, 'png')
+        out.seek(0)
+
+        # send to couchdb
         db.put_attachment(tweet, out, "%s.png" % attname,
                 headers={'Transfer-Encoding': 'chunked'})
 
@@ -87,6 +89,12 @@ class ImageFetcher(object):
                         return getattr(self, 'handle_%s' % handler)(purl)
                     except:
                         pass
+                elif purl.netloc.endswith('googleusercontent.com'):
+                    # hack to handle google urls (picasa, google+)
+                    try:
+                        return self.handle_google(url['expanded_url'])
+                    except:
+                        pass
 
     def scrap_url(self, url, selector, attr='src'):
         d = PyQuery(url)
@@ -129,6 +137,8 @@ class ImageFetcher(object):
     def handle_instagram(self, purl):
         self.scrap_url(purl.get_url(), 'img.photo')
 
+    def handle_google(self, url):
+        attach_img(self.db, self.tweet, url, 'photo')
 
 def attach_food_img(db, tweet):
     fetcher = ImageFetcher(db, tweet)
