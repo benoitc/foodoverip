@@ -67,7 +67,7 @@ class ImageFetcher(object):
         self.tweet = tweet
 
     def process(self):
-        entities = self.tweet.get('entities', {})
+        entities = self.tweet['source'].get('entities', {})
 
         # if we are lucky, twitter already did the jo for us by getting
         # the media url
@@ -137,24 +137,33 @@ def attach_food_img(db, tweet):
 
 def tweet_worker(db, q):
     while True:
-        tweet = q.get()
+        source = q.get()
+        tweet = {}
         try:
-            txt = tweet['text'].strip()
+            txt = source['text'].strip()
             if txt.startswith('RT'):
-                tweet['_id'] = "rt/" + tweet['id_str']
+                tweet['_id'] = "rt/" + source['id_str']
                 rt = True
             else:
-                tweet['_id'] = "t/" + tweet['id_str']
+                tweet['_id'] = "t/" + source['id_str']
                 rt = False
+
 
             if db.doc_exist(tweet['_id']):
                 continue
 
+            tweet.update({'from_user': source.get('from_user'),
+                          'from_user_name': source.get('from_user_name'),
+                          'from_user_id': source.get('from_user_id_str'),
+                          'txt': txt,
+                          'feed': 'twitter',
+                          'source': source})
+
             db.save_doc(tweet)
 
             # attach profil image to the tweet
-            if 'profile_image_url' in tweet:
-                attach_img(db, tweet, tweet['profile_image_url'],
+            if 'profile_image_url' in source:
+                attach_img(db, tweet, source['profile_image_url'],
                     'profile')
 
             # if this isn't an rt get food image, and attach it to the
