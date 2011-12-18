@@ -33,7 +33,7 @@ def get_db(server_uri, db_name):
     return s.get_or_create_db(db_name)
 
 
-def send_attachment(db, tweet, url, attname):
+def attach_img(db, tweet, url, attname):
     res = restkit.request(url)
 
     if res.status_int == 200:
@@ -75,7 +75,7 @@ class ImageFetcher(object):
         for media in entities.get('media', []):
             if media.get('type') == 'photo' and \
                     media.get('media_url') is not None:
-                return send_attachment(self.db, self.tweet, media.get('media_url'), 'photo')
+                return attach_img(self.db, self.tweet, media.get('media_url'), 'photo')
 
         # do the painful job to parse the url
         for url in entities.get('urls', []):
@@ -92,7 +92,7 @@ class ImageFetcher(object):
         d = PyQuery(url)
         img = d(selector)
         imgurl = img[0].attrib(attr)
-        send_attachment(self.db, self.tweet, imgurl, 'photo')
+        attach_img(self.db, self.tweet, imgurl, 'photo')
 
 
     def handle_twitpic(self, purl):
@@ -150,10 +150,9 @@ def tweet_worker(db, q):
             if not db.doc_exist(tweet['_id']):
                 db.save_doc(tweet)
 
-            print tweet
             # attach profil image to the tweet
             if 'profile_image_url' in tweet:
-                send_attachment(db, tweet, tweet['profile_image_url'],
+                attach_img(db, tweet, tweet['profile_image_url'],
                     'profile')
 
             # if this isn't an rt get food image, and attach it to the
@@ -177,7 +176,6 @@ def search_twitter(db, q, since="", concurrency=10):
         gevent.spawn(tweet_worker, db, queue)
 
     while True:
-        print base_url + path
         resp = restkit.request(base_url + path)
         with resp.body_stream() as stream:
             res = json.load(stream)
@@ -258,12 +256,5 @@ def run():
 
 
 if __name__ == "__main__":
-    """db = get_db()
-
-    while True:
-        since, found = search_twitter(db, "#foodoverip")
-        time.sleep(5.0)
-        print "Last id: %s - Found: %s " % (since, found)"""
-
     run()
 
