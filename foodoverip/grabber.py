@@ -269,12 +269,7 @@ def run():
     while True:
         since, found = search_twitter(db, q, since=since,
                 concurrency=concurrency)
-
-        print "Last id: %s - Found: %s " % (since, found)
         gevent.sleep(refresh_time)
-
-
-
 
 if __name__ == "__main__":
     run()
