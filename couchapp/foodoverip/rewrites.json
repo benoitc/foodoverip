@@ -5,13 +5,26 @@
     },
 
     {
-        "from": "/:id",
+        "from": "/food/:id",
         "to": "_show/tweet/:id"
     },
 
     {
         "from": "/random",
         "to": "random.html"
+    },
+    {
+        "from": "/_changes",
+        "to": "../../_changes"
+    },
+    {
+        "from": "/_changes/*",
+        "to": "../../_changes/*"
+    },
+
+    {
+        "from": "/*",
+        "to": "*"
     },
 
     {
