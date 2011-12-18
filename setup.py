@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.1'
+version = '0.2'
 
 setup(name='foodoverip',
       version=version,
@@ -18,25 +18,14 @@ setup(name='foodoverip',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          # -*- Extra requirements: -*-
-          'pyramid',
-          'pyramid_debugtoolbar',
-          'velruse',
-          'tweepy',
-          'redis',
-          'ConfigObject',
-          'hiredis',
-          'restkit',
+          'couchdbkit',
+          'gevent',
           'pyquery',
-          'pillow',
-          'gunicorn',
+          'PIL'
       ],
       entry_points="""
       # -*- Entry points: -*-
-      [paste.app_factory]
-      main = foodoverip:main
+
       [console_scripts]
-      go_grab_food = foodoverip.listen:run_cli
-      """,
-      paster_plugins=['pyramid'],
-      )
+      go_grab_food = foodoverip.grabber:run
+      """)
