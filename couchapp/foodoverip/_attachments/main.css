@@ -1,0 +1,31 @@
+@import "bootstrap/bootstrap.min.css";
+@import url(http://fonts.googleapis.com/css?family=Lobster|Comfortaa);
+
+.brand{ font-family: 'Lobster', arial, serif; }
+
+blockquote {
+    margin-top: 20px;
+}
+
+blockquote p {
+    font-size: 1.3em;
+}
+
+img {
+    padding: 3px;
+    border: 3px #eee solid;
+}
+
+.left img {
+    margin-left: 20px;
+}
+
+.stacked {
+    float: left;
+}
+
+hr {
+    border: 0px;
+    margin: 5px;
+
+}

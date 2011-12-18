@@ -1,0 +1,22 @@
+[
+    {
+        "from": "/",
+        "to": "index.html"
+    },
+
+    {
+        "from": "/:id",
+        "to": "_show/tweet/:id"
+    },
+
+    {
+        "from": "/random",
+        "to": "random.html"
+    },
+
+    {
+        "from": "*",
+        "to": "*"
+    }
+
+]
