@@ -1,14 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8"/> 
-  <title>foodoverip - {{doc._id}}</title>
+    <meta charset="utf-8"/>
+    <title>foodoverip - {{doc._id}}</title>
+    <link rel="stylesheet" href="{{root}}/static/main.css">
+
+    <link rel="stylesheet" href="{{root}}/static/jquery.mobile-1.0.min.css" />
+    <script src="{{root}}/static/js/jquery-1.7.1.min.js"></script>
+    <script src="{{root}}/static/js/jquery.mobile-1.0.min.js"></script>
+
+</head>
   <body>
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="container-fluid">
+          <a href="{{root}}/" class="brand">Food Over IP</a>
+          <ul class="secondary-nav">
+            <li><a href="{{root}}/random">» go random</a></li>
+            <li><a href="{{root}}/about">about</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-  <div id="photo">
-    <img src="{{{photo_uri}}}" alt="{{doc.txt}}">
-  </div>
+    <div class="container-fluid">
+      <div class="content">
+        <div class="row">
+          <div class="span12">
+            <div class="row">
+              <div class="span2">
+                <a href="http://twitter.com/#!/{{doc.from_user}}"><img class="thumbnail avatar" src="{{profile_uri}}"></a>
+              </div>
+              <div class="span10">
+                <p><a href="http://twitter.com/#!{{doc.from_user}}"
+                  class="screen-name">@{{doc.from_user}}</a><br>
+                 @{{doc.from_user_name}}</p>
+              </div>
+            </div>
 
-  {{ vhost }} 
+            <blockquote><p class="tweet-text">{{{ doc.txt }}}</p></blockquote>
+           </div>
+        </div>
+            
+        <div class="description row">
+
+            <div id="photo">
+              <img class="thumbnail" src="{{{photo_uri}}}" alt="{{doc.txt}}">
+            </div>
+
+            <div class="span6"><p><span><a href="{{uri}}">A link
+                  to this "food"</a></span></p></div>
+
+        </div>
+
+        {{#is_location}}
+            <div>
+                  <h3>Location</h3>
+                  <img
+                  src="http://maps.googleapis.com/maps/api/staticmap?center={{coords.lon}},{{coords.lat}}&zoom=11&size=100x100&scale=1&sensor=false">
+                  <hr />
+                  <img
+                  src="http://maps.googleapis.com/maps/api/streetview?size=100x100&location={{coords.lon}},{{loc.lat}}&heading=235&sensor=false">
+            </div>
+        {{/is_location}}
+
+      </div>
+    </div>
   </body>
-</body>  
+</html>

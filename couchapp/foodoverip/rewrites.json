@@ -1,19 +1,30 @@
 [
     {
+        "from": "",
+        "to": "index.html"
+    },
+    {
         "from": "/",
         "to": "index.html"
     },
 
-        {
+    {
         "from": "/photo/:id",
         "to": "../../:id/photo.png"
     },
 
     {
+        "from": "/avatar/:id",
+        "to": "../../:id/profile.png"
+    },
+
+
+    {
         "from": "/random",
         "to": "_random/random",
         "query": {
-            "filter": "foodoverip/food"
+            "filter": "_view",
+            "view": "foodoverip/food"
         }
     },
     {
@@ -32,7 +43,7 @@
     },
 
     {
-        "from": "/:id",
-        "to": "_show/tweet/:id"
+        "from": "/*",
+        "to": "_show/random/*"
     }
 ]
