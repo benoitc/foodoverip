@@ -4,12 +4,7 @@
         "to": "index.html"
     },
 
-    {
-        "from": "/food/:id",
-        "to": "_show/tweet/:id"
-    },
-
-    {
+        {
         "from": "/photo/:id",
         "to": "../../:id/photo.png"
     },
@@ -30,14 +25,14 @@
         "to": "../../_changes/*"
     },
 
+
     {
-        "from": "/*",
+        "from": "/static/*",
         "to": "*"
     },
 
     {
-        "from": "*",
-        "to": "*"
+        "from": "/:id",
+        "to": "_show/tweet/:id"
     }
-
 ]
