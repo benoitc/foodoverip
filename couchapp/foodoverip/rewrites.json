@@ -10,8 +10,16 @@
     },
 
     {
+        "from": "/photo/:id",
+        "to": "../../:id/photo.png"
+    },
+
+    {
         "from": "/random",
-        "to": "random.html"
+        "to": "_random/random",
+        "query": {
+            "filter": "foodoverip/food"
+        }
     },
     {
         "from": "/_changes",
