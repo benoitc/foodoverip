@@ -79,10 +79,7 @@ class ImageFetcher(object):
                 purl = urlparse.urlparse(url['expanded_url'])
                 if purl.netloc in self.HANDLERS:
                     handler = self.HANDLERS[purl.netloc]
-                    try:
-                        return getattr(self, 'handle_%s' % handler)(url['expanded_url'])
-                    except:
-                        pass
+                    return getattr(self, 'handle_%s' % handler)(url['expanded_url'])
                 elif purl.netloc.endswith('googleusercontent.com'):
                     # hack to handle google urls (picasa, google+)
                     try:
