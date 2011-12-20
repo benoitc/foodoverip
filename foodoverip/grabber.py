@@ -153,7 +153,7 @@ def process_tweet(db, source):
         print "ign %s" % tweet['_id']
         return
 
-    print "put %s" % tweet['_id']
+
     tweet.update({'from_user': source.get('from_user'),
                   'from_user_name': source.get('from_user_name'),
                   'from_user_id': source.get('from_user_id_str'),
@@ -163,7 +163,7 @@ def process_tweet(db, source):
 
     db.save_doc(tweet)
 
-    print "saved tweet"
+    print "saved %s" % tweet['_id']
 
     # attach profil image to the tweet
     if 'profile_image_url' in source:
@@ -196,7 +196,6 @@ def search_twitter(db, q, since="", concurrency=10):
 
             if "next_page" in res:
                 path = res["next_page"]
-                print "go next page"
             else:
                 break
 
