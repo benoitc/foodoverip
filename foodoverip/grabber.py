@@ -80,7 +80,7 @@ class ImageFetcher(object):
                 if purl.netloc in self.HANDLERS:
                     handler = self.HANDLERS[purl.netloc]
                     try:
-                        return getattr(self, 'handle_%s' % handler)(purl)
+                        return getattr(self, 'handle_%s' % handler)(url['expanded_url'])
                     except:
                         pass
                 elif purl.netloc.endswith('googleusercontent.com'):
@@ -97,39 +97,39 @@ class ImageFetcher(object):
         attach_img(self.db, self.tweet, imgurl, 'photo')
 
 
-    def handle_twitpic(self, purl):
-        self.scrap_url(purl.get_url(), 'img#photo-display')
+    def handle_twitpic(self, url):
+        self.scrap_url(url, 'img#photo-display')
 
-    def handle_yfrog(self, purl):
-        self.scrap_url(purl.get_url(), 'img#main_image')
+    def handle_yfrog(self, url):
+        self.scrap_url(url, 'img#main_image')
 
-    def handle_lockerz(self, purl):
-        self.scrap_url(purl.get_url(), 'img#photo')
+    def handle_lockerz(self, url):
+        self.scrap_url(url, 'img#photo')
 
-    def handle_flickr(self, purl):
-        self.scrap_url(purl.get_url(), '.photo-div img')
+    def handle_flickr(self, url):
+        self.scrap_url(url, '.photo-div img')
 
-    def handle_twitgoo(self, purl):
-        self.scrap_url(purl.get_url(), 'img#fullsize')
+    def handle_twitgoo(self, url):
+        self.scrap_url(url, 'img#fullsize')
 
-    def handle_imgly(self, purl):
-        self.scrap_url(purl.get_url(), 'img#the-image')
+    def handle_imgly(self, url):
+        self.scrap_url(url, 'img#the-image')
 
-    def handle_twitrpix(self, purl):
-        self.scrap_url(purl.get_url(), 'img#tp_image')
+    def handle_twitrpix(self, url):
+        self.scrap_url(url, 'img#tp_image')
 
-    def handle_shozu(self, purl):
-        r = restkit.request(purl.get_url())
+    def handle_shozu(self, url):
+        r = restkit.request(url)
         self.scrap_url(r.location, 'div.clr div a', attr='href')
 
-    def handle_mobi(self, purl):
-        self.scrap_url(purl.get_url(), 'img#main_picture')
+    def handle_mobi(self, url):
+        self.scrap_url(url, 'img#main_picture')
 
-    def handle_twitsnaps(self, purl):
-        self.scrap_url(purl.get_url(), 'div#main_image img')
+    def handle_twitsnaps(self, url):
+        self.scrap_url(url, 'div#main_image img')
 
-    def handle_instagram(self, purl):
-        self.scrap_url(purl.get_url(), 'img.photo')
+    def handle_instagram(self, url):
+        self.scrap_url(url, 'img.photo')
 
     def handle_google(self, url):
         attach_img(self.db, self.tweet, url, 'photo')
