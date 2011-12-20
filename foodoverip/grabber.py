@@ -192,7 +192,6 @@ def search_twitter(db, q, since="", concurrency=10):
             found += len(results)
             for result in results:
                 process_tweet(db, result)
-                #queue.put(result)
 
             if "next_page" in res:
                 path = res["next_page"]
@@ -203,9 +202,6 @@ def search_twitter(db, q, since="", concurrency=10):
             if since != res['max_id']:
                 since = str(res['max_id'])
 
-
-    db.save_doc({"_id": "status", "since": since},
-            force_update=True)
     return (since, found)
 
 
