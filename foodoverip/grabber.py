@@ -183,6 +183,7 @@ def search_twitter(db, q, since="", concurrency=10):
 
     path = "?" + urllib.urlencode(params)
 
+    max_id = None
     found = 0
     while True:
         resp = restkit.request(base_url + path)
@@ -199,10 +200,10 @@ def search_twitter(db, q, since="", concurrency=10):
             else:
                 break
 
-            if since != res['max_id']:
-                since = str(res['max_id'])
+            if max_id is None:
+                max_id = str(res['max_id'])
 
-    return (since, found)
+    return (max_id, found)
 
 
 
