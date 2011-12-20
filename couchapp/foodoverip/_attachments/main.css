@@ -84,6 +84,11 @@ a.screen-name {
 }
 
 #photos {
-    margin-top: 100px;
+    margin-top: 60px;
 
+}
+
+#photos img {
+    width: 210px;
+    height: 150px;
 }

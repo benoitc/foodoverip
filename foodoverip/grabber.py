@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -
 
+import time
 import argparse
 import ConfigParser
 from io import BytesIO
@@ -10,18 +11,11 @@ import urllib
 import urlparse
 
 import couchdbkit
-from gevent import monkey
-monkey.noisy = False
-monkey.patch_all()
-import gevent
-from gevent.queue import JoinableQueue
+
 import Image
 from pyquery import PyQuery
 import restkit
 from restkit.globals import set_manager
-from restkit.manager.mgevent import GeventManager
-
-set_manager(GeventManager(timeout=300))
 
 ctypes = {'gif': 'image/gif',
           'png': 'image/png',
@@ -144,58 +138,52 @@ def attach_food_img(db, tweet):
     fetcher = ImageFetcher(db, tweet)
     fetcher.process()
 
-
-def tweet_worker(db, q):
-    while True:
-        source = q.get()
-        tweet = {}
-        try:
-            txt = source['text'].strip()
-            if txt.startswith('RT'):
-                tweet['_id'] = "rt/" + source['id_str']
-                rt = True
-            else:
-                tweet['_id'] = "t/" + source['id_str']
-                rt = False
+def process_tweet(db, source):
+    tweet = {}
+    txt = source['text'].strip()
+    if txt.startswith('RT'):
+        tweet['_id'] = "rt/" + source['id_str']
+        rt = True
+    else:
+        tweet['_id'] = "t/" + source['id_str']
+        rt = False
 
 
-            if db.doc_exist(tweet['_id']):
-                continue
+    if db.doc_exist(tweet['_id']):
+        print "ign %s" % tweet['_id']
+        return
 
-            tweet.update({'from_user': source.get('from_user'),
-                          'from_user_name': source.get('from_user_name'),
-                          'from_user_id': source.get('from_user_id_str'),
-                          'txt': txt,
-                          'feed': 'twitter',
-                          'source': source})
+    print "put %s" % tweet['_id']
+    tweet.update({'from_user': source.get('from_user'),
+                  'from_user_name': source.get('from_user_name'),
+                  'from_user_id': source.get('from_user_id_str'),
+                  'txt': txt,
+                  'feed': 'twitter',
+                  'source': source})
 
-            db.save_doc(tweet)
+    db.save_doc(tweet)
 
-            # attach profil image to the tweet
-            if 'profile_image_url' in source:
-                attach_img(db, tweet, source['profile_image_url'],
-                    'profile')
+    print "saved tweet"
 
-            # if this isn't an rt get food image, and attach it to the
-            # tweet
-            if not rt:
-                attach_food_img(db, tweet)
-        finally:
-            q.task_done()
+    # attach profil image to the tweet
+    if 'profile_image_url' in source:
+        attach_img(db, tweet, source['profile_image_url'],
+            'profile')
+
+    # if this isn't an rt get food image, and attach it to the
+    # tweet
+    if not rt:
+        attach_food_img(db, tweet)
 
 def search_twitter(db, q, since="", concurrency=10):
     base_url = "http://search.twitter.com/search.json"
-    params = {"q": q, "include_entities": "true"}
+    params = {"q": q, "include_entities": "true", "result_type": "mixed"}
     if since:
         params.update({"since": since})
 
     path = "?" + urllib.urlencode(params)
 
     found = 0
-    queue = JoinableQueue()
-    for i in range(concurrency):
-        gevent.spawn(tweet_worker, db, queue)
-
     while True:
         resp = restkit.request(base_url + path)
         with resp.body_stream() as stream:
@@ -203,18 +191,18 @@ def search_twitter(db, q, since="", concurrency=10):
             results = res.get('results')
             found += len(results)
             for result in results:
-                queue.put(result)
+                process_tweet(db, result)
+                #queue.put(result)
 
             if "next_page" in res:
                 path = res["next_page"]
+                print "go next page"
             else:
                 break
 
             if since != res['max_id']:
                 since = str(res['max_id'])
 
-    # block until all tweets has been saved
-    queue.join()
 
     db.save_doc({"_id": "status", "since": since},
             force_update=True)
@@ -239,7 +227,7 @@ def run():
     db_name = 'foodoverip'
     server_uri = 'http://127.0.0.1:5984'
     concurrency = 10
-    q = '#foodoverip'
+    q = 'foodoverip'
     refresh_time = 10.0
 
     # TODO: improve this ugly part there's surely a better way to handle
@@ -269,7 +257,7 @@ def run():
     while True:
         since, found = search_twitter(db, q, since=since,
                 concurrency=concurrency)
-        gevent.sleep(refresh_time)
+        time.sleep(refresh_time)
 
 if __name__ == "__main__":
     run()

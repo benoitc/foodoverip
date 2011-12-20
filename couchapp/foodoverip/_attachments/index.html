@@ -41,7 +41,9 @@
         </div>
 
 
-        <div id="photos" class="row"></div>
+        <div id="photos" class="row">
+          <ul class="media-grid"></ul>
+        </div>
 
         <footer>
         <p>Powered by <a href="http://apache.couchdb.org">Apache
@@ -59,26 +61,17 @@
           "url": "foods?limit=25&include_docs=true",
           "dataType": "json",
           "success": function(data) {
-            console.log(data);
             if (data.rows) {
               $.each(data.rows, function(idx, row) {
                 var doc = row.doc;
                 var docid = doc._id.replace("/", "%2F");
                 console.log("manage " + docid);
-                var img = $('<a href="' + docid + '"><img src="photo/' 
-                  + docid + '"></a>');
+                var img = $('<li><a href="' + docid + '"><img src="photo/' 
+                  + docid + '" class="thumbnail"></a></li>');
 
-                img.appendTo("#photos");
-
+                img.appendTo("#photos ul.media-grid");
                 $('#photos').imagesLoaded(function() {
-                    
-                  $("#photos a img").one(function() {
-                    console.log(this.nodeName);
-                    console.log("width " + this.width);
-                  });
-
-            
-                  $('#photos').gpGallery('a');
+                  //$('#photos').gpGallery('a');
                 });
               });
             }
