@@ -1,0 +1,5 @@
+[foodoverip]
+server_uri = http://127.0.0.1:5984 ; uri of couchdb node
+db = foodoverip ; db where to save data
+q = #foodoverip ; query to do in twitter
+refresh_tim = 10 ; in seconds
