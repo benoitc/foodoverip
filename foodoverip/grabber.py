@@ -178,7 +178,7 @@ def process_tweet(db, source):
 def search_twitter(db, q, since="", concurrency=10):
     base_url = "http://search.twitter.com/search.json"
     params = {"q": q, "include_entities": "true", "result_type": "mixed"}
-    if since:
+    if since is not None:
         params.update({"since": since})
 
     path = "?" + urllib.urlencode(params)
@@ -202,9 +202,9 @@ def search_twitter(db, q, since="", concurrency=10):
             if max_id is None:
                 max_id = str(res['max_id'])
 
-    return (max_id, found)
-
-
+    if max_id is not None:
+        since = max_id
+    return (since, found)
 
 def run():
     parser = argparse.ArgumentParser(
@@ -249,7 +249,7 @@ def run():
                 refresh_time = config.getfloat('foodoverip', 'refresh_time')
     db = get_db(server_uri, db_name)
 
-    since = 0
+    since = None
     while True:
         since, found = search_twitter(db, q, since=since,
                 concurrency=concurrency)
