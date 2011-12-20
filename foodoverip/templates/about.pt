@@ -1,5 +1,0 @@
-<html metal:use-macro="base.macros['base']">
-    <div metal:fill-slot='content'>
-        Take pictures and post them on twitter with the <strong>#${request.registry.settings.hashtag}</strong> hashtag, we care about the rest.
-    </div>
-</html>
