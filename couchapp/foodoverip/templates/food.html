@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8"/>
     <title>foodoverip - {{doc._id}}</title>
+
+    <script src="{{root}}/static/html5.js"></script>
     <link rel="stylesheet" href="{{root}}/static/main.css">
 
-    <link rel="stylesheet" href="{{root}}/static/jquery.mobile-1.0.min.css" />
-    <script src="{{root}}/static/js/jquery-1.7.1.min.js"></script>
-    <script src="{{root}}/static/js/jquery.mobile-1.0.min.js"></script>
+
 
 </head>
   <body>
@@ -48,22 +48,31 @@
               <img class="thumbnail" src="{{{photo_uri}}}" alt="{{doc.txt}}">
             </div>
 
-            <div class="span6"><p><span><a href="{{uri}}">A link
-                  to this "food"</a></span></p></div>
-
+            
         </div>
 
+          <div class="row">
+              <p><a href="{{uri}}" class="food-link">A link to this "food"</a></p>
+          </div>
+
+
         {{#is_location}}
-            <div>
-                  <h3>Location</h3>
-                  <img
-                  src="http://maps.googleapis.com/maps/api/staticmap?center={{coords.lon}},{{coords.lat}}&zoom=11&size=100x100&scale=1&sensor=false">
-                  <hr />
-                  <img
-                  src="http://maps.googleapis.com/maps/api/streetview?size=100x100&location={{coords.lon}},{{loc.lat}}&heading=235&sensor=false">
+            <div class="row">
+              
+              <div id="span6">
+                <img src="http://maps.googleapis.com/maps/api/staticmap?center={{coords.lon}},{{coords.lat}}&zoom=11&size=200x100&scale=1&sensor=false">
+              </div>
+              <div id="span6">
+                <img src="http://maps.googleapis.com/maps/api/streetview?size=200x100&location={{coords.lon}},{{loc.lat}}&heading=235&sensor=false">
+              </div>
             </div>
         {{/is_location}}
 
+      <footer>
+        <p>Powered by <a href="http://apache.couchdb.org">Apache
+          CouchDB</a> - Code available on <a
+          href="https://github.com/benoitc/foodoverip">github</a></p>
+        </footer>
       </div>
     </div>
   </body>

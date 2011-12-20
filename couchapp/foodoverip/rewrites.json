@@ -9,6 +9,16 @@
     },
 
     {
+        "from": "/about",
+        "to": "about.html"
+    },
+
+    {
+        "from": "/foods",
+        "to": "_view/food"
+    },
+
+    {
         "from": "/photo/:id",
         "to": "../../:id/photo.png"
     },

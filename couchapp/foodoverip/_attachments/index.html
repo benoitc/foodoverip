@@ -1,11 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <meta charset="utf-8"/> 
-      <link rel="stylesheet" href="static/main.css" />
+    <meta charset="utf-8"/> 
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="html5.js"></script>
+      <![endif]-->
+
+
+    <link rel="stylesheet" href="static/main.css" />
+    <link rel="stylesheet" href="static/jquery-gp-gallery.css" />
+
+    <script src="static/jquery-1.7.1.min.js"></script>
+    <script src="static/jquery.imagesloaded.js"></script>
+    <script src="static/jquery-gp-gallery.js"></script>
+    <script>
+           </script>
     </head>
     <body>
-     <div data-scrollspy="scrollspy" class="topbar">
+     <div class="topbar">
       <div class="topbar-inner">
         <div class="container">
             <a href="#" class="brand">Food Over IP</a>
@@ -16,14 +30,61 @@
         </div>
       </div>
     </div>
-    <div>&nbsp;</div>
-    <div>&nbsp;</div>
-    <div>&nbsp;</div>
+
     <div class="container">
       <div class="content">
-          <tal:block metal:define-slot="content">
-          </tal:block>
+
+        <h1>Welcome to #foodverip</h1>
+          <p>Take pictures and post them on twitter with the
+          <strong>#feedoverip</strong> hashtag, we care about the
+          rest.</p>
+        </div>
+
+
+        <div id="photos" class="row"></div>
+
+        <footer>
+        <p>Powered by <a href="http://apache.couchdb.org">Apache
+          CouchDB</a> - Code available on <a
+          href="https://github.com/benoitc/foodoverip">github</a></p>
+        </footer>
       </div>
-    </div>  
-    </body>
+    </div>
+    
+
+    <script>
+
+      $(function() {
+        $.ajax({
+          "url": "foods?limit=25&include_docs=true",
+          "dataType": "json",
+          "success": function(data) {
+            console.log(data);
+            if (data.rows) {
+              $.each(data.rows, function(idx, row) {
+                var doc = row.doc;
+                var docid = doc._id.replace("/", "%2F");
+                console.log("manage " + docid);
+                var img = $('<a href="' + docid + '"><img src="photo/' 
+                  + docid + '"></a>');
+
+                img.appendTo("#photos");
+
+                $('#photos').imagesLoaded(function() {
+                    
+                  $("#photos a img").one(function() {
+                    console.log(this.nodeName);
+                    console.log("width " + this.width);
+                  });
+
+            
+                  $('#photos').gpGallery('a');
+                });
+              });
+            }
+           }});
+        });
+
+    </script>
+  </body>
 </html>

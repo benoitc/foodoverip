@@ -1,12 +1,13 @@
 @import "bootstrap/bootstrap.min.css";
-@import url(http://fonts.googleapis.com/css?family=Lobster|Comfortaa);
+
+
 
 body {
-        padding-top: 60px;
-      }
+    padding-top: 60px;
+}
 
 
-.brand{ font-family: 'Lobster', arial, serif; }
+
 
 blockquote {
     margin-top: 20px;
@@ -14,11 +15,6 @@ blockquote {
 
 blockquote p {
     font-size: 1.3em;
-}
-
-img {
-    padding: 3px;
-    border: 3px #eee solid;
 }
 
 
@@ -41,6 +37,15 @@ hr {
     margin-bottom: 6px;
 } 
 
+a.food-link {
+    font-family: Georgia,Palatino,Helvetica Neue,Helvetica,Arial,sans-serif !important;
+    font-size: 20px;
+    font-weight: normal;
+    line-height: 36px;
+    margin-bottom: 6px;
+    text-decoration: none;
+} 
+
 .avatar {
     width: 48px;
     height: 48px;
@@ -56,12 +61,16 @@ hr {
 
 #photo {
     display: block;
-    width: 640px;
+    padding-left: 15px;
 }
 
 #photo img {
-    width: 100%;
-    height: 100%;
+    width: 480px;
+    margin-bottom: 18px;
+
+    padding: 3px;
+    border: 5px #eee solid;
+
 }
 
 a.screen-name {
@@ -72,4 +81,9 @@ a.screen-name {
     font-style: bold;
     text-decoration: none;
     color: #000;
+}
+
+#photos {
+    margin-top: 100px;
+
 }
