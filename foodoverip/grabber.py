@@ -55,7 +55,8 @@ class ImageFetcher(object):
                 'moby.to': 'moby',
                 'mobypicture.com': 'moby',
                 'twitsnaps.com': 'twitsnaps',
-                'instagr.am': 'instagram'}
+                'instagr.am': 'instagram',
+                'ow.ly': 'owly'}
 
 
     def __init__(self, db, tweet):
@@ -130,6 +131,13 @@ class ImageFetcher(object):
 
     def handle_google(self, url):
         attach_img(self.db, self.tweet, url, 'photo')
+
+    def handle_owly(self, url):
+        purl = urlparse.urlparse(url)
+        imgid = purl.path[1:]
+        imgurl = 'http://static.ow.ly/photos/original/%s.jpg' % imgid
+        attach_img(self.db, self.tweet, imgurl, 'photo')
+
 
 def attach_food_img(db, tweet):
     fetcher = ImageFetcher(db, tweet)
