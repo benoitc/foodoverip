@@ -183,12 +183,12 @@ def process_tweet(db, source):
 def search_twitter(db, q, since="", concurrency=10):
     base_url = "http://search.twitter.com/search.json"
     params = {"q": q, "include_entities": "true", "result_type": "mixed"}
-    if since is not None:
+    if since != 0:
         params.update({"since": since})
 
     path = "?" + urllib.urlencode(params)
 
-    max_id = 0
+    max_id = since
     found = 0
     while True:
         resp = restkit.request(base_url + path)
@@ -256,7 +256,7 @@ def run():
                 refresh_time = config.getfloat('foodoverip', 'refresh_time')
     db = get_db(server_uri, db_name)
 
-    since = None
+    since = 0
     while True:
         since, found = search_twitter(db, q, since=since,
                 concurrency=concurrency)
