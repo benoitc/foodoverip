@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8"/> 
-
+    <meta charset="utf-8"/>
+    <title>Food Over Ip - welcome</title>
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
       <script src="html5.js"></script>
@@ -35,7 +35,7 @@
       <div class="content">
 
         <h1>Welcome to #foodoverip</h1>
-          <p>Take pictures and post them on twitter with the
+          <p>Take pictures of food and post them on twitter with the
           <strong>#foodoverip</strong> hashtag, we will take care about the
           rest.</p>
         </div>
@@ -52,7 +52,7 @@
         </footer>
       </div>
     </div>
-    
+
 
     <script>
 
@@ -66,7 +66,7 @@
                 var doc = row.doc;
                 var docid = doc._id.replace("/", "%2F");
                 console.log("manage " + docid);
-                var img = $('<li><a href="' + docid + '"><img src="photo/' 
+                var img = $('<li><a href="' + docid + '"><img src="photo/'
                   + docid + '" class="thumbnail"></a></li>');
 
                 img.appendTo("#photos ul.media-grid");
