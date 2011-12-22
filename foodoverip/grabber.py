@@ -91,7 +91,7 @@ class ImageFetcher(object):
     def scrap_url(self, url, selector, attr='src'):
         d = PyQuery(url)
         img = d(selector)
-        imgurl = img[0].attrib['attr']
+        imgurl = img[0].attrib['src']
         attach_img(self.db, self.tweet, imgurl, 'photo')
 
 
@@ -134,7 +134,7 @@ class ImageFetcher(object):
 
     def handle_owly(self, url):
         purl = urlparse.urlparse(url)
-        imgid = purl.path[1:]
+        imgid = purl.path.rsplit("/", 1)[1]
         imgurl = 'http://static.ow.ly/photos/original/%s.jpg' % imgid
         attach_img(self.db, self.tweet, imgurl, 'photo')
 
