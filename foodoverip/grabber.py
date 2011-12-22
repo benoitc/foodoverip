@@ -199,14 +199,15 @@ def search_twitter(db, q, since="", concurrency=10):
             for result in results:
                 process_tweet(db, result)
 
+            # we are not sure that the results come in order
+            if res['max_id'] > max_id:
+                max_id = res['max_id']
+
+            # next page continue, else stop
             if "next_page" in res:
                 path = res["next_page"]
             else:
                 break
-
-            # we are not sure that the results come in order
-            if res['max_id'] > max_id:
-                max_id = res['max_id']
 
     if max_id:
         since = str(max_id)
