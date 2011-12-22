@@ -180,7 +180,7 @@ def process_tweet(db, source):
     if not rt:
         attach_food_img(db, tweet)
 
-def search_twitter(db, q, since=0 concurrency=10):
+def search_twitter(db, q, since=0, concurrency=10):
     base_url = "http://search.twitter.com/search.json"
     params = {"q": q, "include_entities": "true", "result_type": "mixed"}
     if since != 0:
