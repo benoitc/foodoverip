@@ -91,7 +91,7 @@ class ImageFetcher(object):
     def scrap_url(self, url, selector, attr='src'):
         d = PyQuery(url)
         img = d(selector)
-        imgurl = img[0].attrib(attr)
+        imgurl = img[0].attrib['attr']
         attach_img(self.db, self.tweet, imgurl, 'photo')
 
 
