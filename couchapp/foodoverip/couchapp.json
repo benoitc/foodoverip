@@ -1,3 +1,4 @@
 {
-    "host": "foodoverip.org"
+    "host": "foodoverip.org",
+    "index": "/_rewrite/"
 }

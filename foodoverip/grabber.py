@@ -183,7 +183,7 @@ def process_tweet(db, source):
 def search_twitter(db, q, since=0, concurrency=10):
     base_url = "http://search.twitter.com/search.json"
     params = {"q": q, "include_entities": "true", "result_type": "mixed"}
-    if since != 0:
+    if since > 0:
         params.update({"since": str(since)})
 
     path = "?" + urllib.urlencode(params)
