@@ -66,7 +66,7 @@
                 var doc = row.doc;
                 var docid = doc._id.replace("/", "%2F");
                 console.log("manage " + docid);
-                var img = $('<li><a href="' + docid + '"><img src="photo/'
+                var img = $('<li><a href="' + docid + '"><img src="thumb/'
                   + docid + '" class="thumbnail"></a></li>');
 
                 img.appendTo("#photos ul.media-grid");

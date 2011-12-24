@@ -24,6 +24,11 @@
     },
 
     {
+        "from": "/thumb/:id",
+        "to": "../../:id/photo_thumb.png"
+    },
+
+    {
         "from": "/avatar/:id",
         "to": "../../:id/profile.png"
     },
