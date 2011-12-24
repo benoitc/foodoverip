@@ -58,7 +58,7 @@
 
       $(function() {
         $.ajax({
-          "url": "foods?limit=25&include_docs=true",
+          "url": "foods?limit=25&include_docs=true&descending=true",
           "dataType": "json",
           "success": function(data) {
             if (data.rows) {
@@ -70,9 +70,9 @@
                   + docid + '" class="thumbnail"></a></li>');
 
                 img.appendTo("#photos ul.media-grid");
-                $('#photos').imagesLoaded(function() {
+                //$('#photos').imagesLoaded(function() {
                   //$('#photos').gpGallery('a');
-                });
+                //});
               });
             }
            }});
