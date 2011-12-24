@@ -21,11 +21,12 @@ ctypes = {'gif': 'image/gif',
           'png': 'image/png',
           'jpeg': 'image/jpeg'}
 
+max_width = 210
+height = 150
 
 def get_db(server_uri, db_name):
     s = couchdbkit.Server(server_uri)
     return s.get_or_create_db(db_name)
-
 
 def attach_img(db, tweet, url, attname):
     res = restkit.request(url)
@@ -40,6 +41,25 @@ def attach_img(db, tweet, url, attname):
         db.put_attachment(tweet, out, "%s.png" % attname,
                 headers={'Transfer-Encoding': 'chunked'})
 
+        # create thumbnail if the attachment is a photo
+        if attname == 'photo':
+            ratio = 1
+            if img.size[0] > max_width:
+                ratio = max_width / float(img.size[0])
+            elif img.size[1] > max_height:
+                ratio = max_height / float(img.size[1])
+
+            w = img.size[0] * ratio
+            h = img.size[1] * ratio
+
+            thumb = img.resize((int(w), int(h)), Image.ANTIALIAS)
+            tout = BytesIO()
+            thumb.save(tout, 'png')
+            tout.seek(0)
+
+            # send it to couchdb
+            db.put_attachment(tweet, tout, "%s_thumb.png" % attname,
+                headers={'Transfer-Encoding': 'chunked'})
 
 class ImageFetcher(object):
     HANDLERS = {'twitpic.com': 'twitpic',

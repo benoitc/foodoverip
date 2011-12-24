@@ -28,4 +28,5 @@ setup(name='foodoverip',
 
       [console_scripts]
       go_grab_food = foodoverip.grabber:run
+      make_food_thumb = foodoverip.make_thumb:run
       """)
