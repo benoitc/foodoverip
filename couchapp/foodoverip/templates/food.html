@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>foodoverip - {{doc._id}}</title>
+    <title>foodoverip - {{href}}</title>
 
     <script src="{{root}}/static/html5.js"></script>
     <link rel="stylesheet" href="{{root}}/static/main.css">
@@ -41,14 +41,14 @@
             <blockquote><p class="tweet-text">{{{ doc.txt }}}</p></blockquote>
            </div>
         </div>
-            
+
         <div class="description row">
 
             <div id="photo">
               <img class="thumbnail" src="{{{photo_uri}}}" alt="{{doc.txt}}">
             </div>
 
-            
+
         </div>
 
           <div class="row">
@@ -58,7 +58,7 @@
 
         {{#is_location}}
             <div class="row">
-              
+
               <div id="span6">
                 <img src="http://maps.googleapis.com/maps/api/staticmap?center={{coords.lon}},{{coords.lat}}&zoom=11&size=200x100&scale=1&sensor=false">
               </div>

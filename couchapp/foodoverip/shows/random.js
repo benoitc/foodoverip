@@ -55,7 +55,8 @@ function(doc, req) {
             vhost: req.headers['x-couchdb-vhost-path'],
             is_location: is_location,
             coords: coords,
-            uri: uri
+            uri: uri,
+            href: href
         });
     });
 }
