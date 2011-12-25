@@ -57,8 +57,9 @@
         "to": "*"
     },
 
+
     {
         "from": "/*",
-        "to": "_show/random/*"
+        "to": "_show/random/t/*"
     }
 ]

@@ -65,8 +65,10 @@
               $.each(data.rows, function(idx, row) {
                 var doc = row.doc;
                 var docid = doc._id.replace("/", "%2F");
+                var href = doc._id.replace("t/", "");
+
                 console.log("manage " + docid);
-                var img = $('<li><a href="' + docid + '"><img src="thumb/'
+                var img = $('<li><a href="' + href + '"><img src="thumb/'
                   + docid + '" class="thumbnail"></a></li>');
 
                 img.appendTo("#photos ul.media-grid");
