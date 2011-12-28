@@ -208,7 +208,6 @@ def search_twitter(db, q, since=0, concurrency=10):
 
     path = "?" + urllib.urlencode(params)
 
-    max_id = since
     found = 0
     while True:
         resp = restkit.request(base_url + path)
@@ -219,9 +218,8 @@ def search_twitter(db, q, since=0, concurrency=10):
             for result in results:
                 process_tweet(db, result)
 
-            # we are not sure that the results come in order
-            if res['max_id'] > max_id:
-                max_id = res['max_id']
+            if res["page"] == 1 and res['max_id'] != since:
+                since = res['max_id']
 
             # next page continue, else stop
             if "next_page" in res:
@@ -229,8 +227,6 @@ def search_twitter(db, q, since=0, concurrency=10):
             else:
                 break
 
-    if max_id:
-        since = max_id
     return (since, found)
 
 def run():
